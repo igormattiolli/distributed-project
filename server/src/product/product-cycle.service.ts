@@ -11,7 +11,7 @@ export class ProductCycleService {
     private entityManager : EntityManager,
     private gateway : ProductsGateway
   ) {
-
+    this.runCycle()
   }
 
   private async runCycle() : Promise<void> {
