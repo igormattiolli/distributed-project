@@ -2,7 +2,6 @@ import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/commo
 import { ProductService } from './product.service';
 import { Product } from 'src/entities/Product.entity';
 import { CreateProductDto, UpdateProductDto } from './models/product.dto';
-import { ResponseSerializerInterceptor } from 'src/common/interceptors/serialize-response.interceptor';
 
 @Controller('/products')
 export class ProductController {
