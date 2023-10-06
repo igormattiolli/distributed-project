@@ -3,7 +3,7 @@ import {
     WebSocketGateway,
     WebSocketServer,
 } from '@nestjs/websockets';
-import { ProductCycleResponse } from './models/products.response';
+import { ProductCycleResponse } from './models/product.response';
 import { ProductStatus } from 'src/entities/Product.entity';
 import { Server } from 'socket.io';
 
@@ -12,7 +12,7 @@ import { Server } from 'socket.io';
     cors: { origin: '*' },
     }
     )
-export class ProductsGateway {
+export class ProductGateway {
     @WebSocketServer()
     private server: Server;
 

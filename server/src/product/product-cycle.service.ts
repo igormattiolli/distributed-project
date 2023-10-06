@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { Product, ProductStatus } from 'src/entities/Product.entity';
 import { EntityManager, Not } from 'typeorm';
-import { ProductsGateway } from './product.gateway';
-import { ProductCycleResponse } from './models/products.response';
+import { ProductCycleResponse } from './models/product.response';
+import { ProductGateway } from './product.gateway';
 
 @Injectable()
 export class ProductCycleService {
 
   constructor(
     private entityManager : EntityManager,
-    private gateway : ProductsGateway
+    private gateway : ProductGateway
   ) {
     this.runCycle()
   }

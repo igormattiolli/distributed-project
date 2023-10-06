@@ -2,5 +2,9 @@ import { ProductStatus } from "src/entities/Product.entity";
 
 export class ProductCycleResponse {
     id : number;
-    status : ProductStatus
+    status : ProductStatus;
+}
+
+export class ProductGenericResponse {
+    id : number;
 }
