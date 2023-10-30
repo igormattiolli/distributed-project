@@ -1,8 +1,11 @@
 --Postgresql 15
 CREATE DATABASE distributed;
-CREATE TYPE public.product_status_enum AS ENUM
+\c distributed;
+
+CREATE TYPE product_status_enum AS ENUM
     ('ordered', 'shipped', 'out_for_delivery', 'delivered');
-CREATE TABLE public.product
+    
+CREATE TABLE product
 (
     id integer NOT NULL GENERATED ALWAYS AS IDENTITY,
     name text NOT NULL,
