@@ -1,6 +1,7 @@
 "use client";
-import { useState, KeyboardEvent } from "react";
+import { useState, KeyboardEvent, useEffect } from "react";
 import { v4 as uuid } from "uuid";
+import io from "socket.io-client";
 
 import "../../styles/tasklist.scss";
 
@@ -8,12 +9,6 @@ import { FiTrash, FiCheckSquare } from "react-icons/fi";
 
 interface Task {
   id: string;
-  title: string;
-  isComplete: boolean;
-}
-
-interface Order {
-  id: number;
   name: string;
   createdAt: string;
   updatedAt: string;
@@ -23,41 +18,53 @@ interface Order {
 export function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState("");
+  const [updatedOrders, setUpdatedOrders] = useState<Task[]>([]);
 
-  function handleCreateNewTask() {
-    if (newTaskTitle === "") return;
+  const handleCreateNewTask = async () => {
+    await fetch("http://localhost:3333/products", {
+      body: JSON.stringify({ name: newTaskTitle, status: "ordered" }),
+      method: "POST",
+      headers: { "Content-type": "application/json; charset=UTF-8" },
+    });
+    await listOrders();
 
-    const createNewTask = [
-      ...tasks,
-      {
-        id: uuid(),
-        title: newTaskTitle,
-        isComplete: false,
-      },
-    ];
-
-    setTasks(createNewTask);
     setNewTaskTitle("");
+  };
 
-    
-  }
+  const listOrders = async () => {
+    const resp = await fetch(`http://localhost:3333/products`);
+    const data = await resp.json();
+    setTasks(data);
+  };
 
-  // const createOrder = async () => {
-  //   await fetch("http://localhost:3333/products", {
-  //     body: JSON.stringify({ name: productName, status: "ordered" }),
-  //     method: "POST",
-  //     headers: { "Content-type": "application/json; charset=UTF-8" },
-  //   });
-  //   await listOrders();
-  // };
+  // function handleRemoveTask(id: string) {
+  //   const toggleTasks = tasks.filter((task) => task.id !== id);
 
+  //   setTasks(toggleTasks);
+  // }
 
+  useEffect(() => {
+    if (updatedOrders.length) {
+      updatedOrders.forEach((updatedOrder) => {
+        const currentOrderIndex = tasks.findIndex(
+          (order) => order.id === updatedOrder.id
+        );
+        tasks[currentOrderIndex].status = updatedOrder.status;
+        setTasks([...tasks]);
+      });
+    }
+  }, [updatedOrders]);
 
-  function handleRemoveTask(id: string) {
-    const toggleTasks = tasks.filter((task) => task.id !== id);
-
-    setTasks(toggleTasks);
-  }
+  useEffect(() => {
+    listOrders();
+    const ws = io("http://localhost:3333");
+    ws.on("status", (updatedOrders: Task[]) => {
+      setUpdatedOrders(updatedOrders);
+    });
+    return () => {
+      ws.close();
+    };
+  }, []);
 
   function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     const { key } = event;
@@ -70,7 +77,7 @@ export function TaskList() {
   return (
     <section className="task-list container">
       <header>
-        <h2>Listas de produtos</h2>
+        <h2>Lista de pedidos</h2>
 
         <div className="input-group">
           <input
@@ -95,19 +102,19 @@ export function TaskList() {
           {tasks.map((task, index) => (
             <li key={task.id}>
               <div
-                className={task.isComplete ? "completed" : ""}
+                // className={task ? "completed" : ""}
                 data-testid="task"
               >
                 <label className="checkbox-container">{index}</label>
-                <p>{task.title}</p>
+                <p>{task.name}</p>
               </div>
 
               <button
                 type="button"
                 data-testid="remove-task-button"
-                onClick={() => handleRemoveTask(task.id)}
               >
-                <FiTrash size={16} />
+                {/* <FiTrash size={16} /> */}
+                {task.status}
               </button>
             </li>
           ))}
