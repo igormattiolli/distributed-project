@@ -1,7 +1,8 @@
+"use client";
 import { useState, KeyboardEvent } from "react";
 import { v4 as uuid } from "uuid";
 
-import "../styles/tasklist.scss";
+import "../../styles/tasklist.scss";
 
 import { FiTrash, FiCheckSquare } from "react-icons/fi";
 
@@ -9,6 +10,14 @@ interface Task {
   id: string;
   title: string;
   isComplete: boolean;
+}
+
+interface Order {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  status: string;
 }
 
 export function TaskList() {
@@ -28,19 +37,21 @@ export function TaskList() {
     ];
 
     setTasks(createNewTask);
-
     setNewTaskTitle("");
+
+    
   }
 
-  function handleToggleTaskCompletion(id: string) {
-    const toggleTasks = tasks.map((task) => {
-      if (task.id === id) task.isComplete = !task.isComplete;
+  // const createOrder = async () => {
+  //   await fetch("http://localhost:3333/products", {
+  //     body: JSON.stringify({ name: productName, status: "ordered" }),
+  //     method: "POST",
+  //     headers: { "Content-type": "application/json; charset=UTF-8" },
+  //   });
+  //   await listOrders();
+  // };
 
-      return task;
-    });
 
-    setTasks(toggleTasks);
-  }
 
   function handleRemoveTask(id: string) {
     const toggleTasks = tasks.filter((task) => task.id !== id);
