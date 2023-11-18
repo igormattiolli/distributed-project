@@ -1,5 +1,7 @@
 ### Trabalho de distribuidos
+## Para rodar o projeto siga os seguintes passos
 
 #### Instalação 
- - docker compose up 
+ - Com o docker compose instalado rodar: docker compose up
+   
 
