@@ -1,11 +1,10 @@
 "use client";
 import { useState, KeyboardEvent, useEffect } from "react";
-import { v4 as uuid } from "uuid";
 import io from "socket.io-client";
 
 import "../../styles/tasklist.scss";
 
-import { FiTrash, FiCheckSquare } from "react-icons/fi";
+import { FiCheckSquare } from "react-icons/fi";
 
 interface Task {
   id: string;
@@ -36,12 +35,6 @@ export function TaskList() {
     const data = await resp.json();
     setTasks(data);
   };
-
-  // function handleRemoveTask(id: string) {
-  //   const toggleTasks = tasks.filter((task) => task.id !== id);
-
-  //   setTasks(toggleTasks);
-  // }
 
   useEffect(() => {
     if (updatedOrders.length) {
@@ -101,19 +94,12 @@ export function TaskList() {
         <ul>
           {tasks.map((task, index) => (
             <li key={task.id}>
-              <div
-                // className={task ? "completed" : ""}
-                data-testid="task"
-              >
+              <div data-testid="task">
                 <label className="checkbox-container">{index}</label>
                 <p>{task.name}</p>
               </div>
 
-              <button
-                type="button"
-                data-testid="remove-task-button"
-              >
-                {/* <FiTrash size={16} /> */}
+              <button type="button" data-testid="remove-task-button">
                 {task.status}
               </button>
             </li>
